@@ -2,7 +2,7 @@
 
 import logging
 from aiohttp import web
-from h3_engine import H3Engine
+from remote_engine import RemoteEngine
 from h3_jobs import JobStore
 from model_catalog import LEGACY_PRESETS
 from server_settings import ServerSettings
@@ -16,9 +16,12 @@ def make_app(settings=None, engine=None, *, start_worker=True):
     store = JobStore(settings.data / "jobs.db")
     store.backfill_lora(LEGACY_PRESETS)
     store.fail_running("server restarted while the job was running")
+    if engine is None and not settings.comfy_url:
+        from h3_engine import H3Engine
     engine = (
         engine
         if engine is not None
+        else RemoteEngine(settings.comfy_url, settings.workflows) if settings.comfy_url
         else H3Engine(settings.comfyui, settings.comfy_args, audio_settings=settings)
     )
     worker = Worker(store, engine, settings)
@@ -61,7 +64,7 @@ if __name__ == "__main__":
         level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s"
     )
     settings = ServerSettings.from_env()
-    if settings.comfyui is None:
+    if settings.comfyui is None and not settings.comfy_url:
         raise SystemExit("set H3_COMFYUI to the ComfyUI checkout")
     app = make_app(settings)
     app["worker"].engine.bootstrap()

@@ -1,0 +1,11 @@
+*
+!Dockerfile
+!requirements-macos.txt
+!server/
+!server/**
+!web/
+!web/**
+web/node_modules
+web/dist
+**/__pycache__
+**/*.pyc

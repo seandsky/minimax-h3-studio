@@ -472,3 +472,18 @@ The dev server reads `.env` from the repo root and proxies `/api` and `/files` t
 ## License
 
 The code in this repository is released under the Apache License 2.0. ComfyUI (GPL-3.0) is not included; it is installed separately and imported at run time. Model weights are distributed by their authors under their own licenses.
+
+## macOS / HTTP-only remote ComfyUI
+
+Run `./start-macos.sh` to use this Studio on a Mac with remote ComfyUI over
+Tailscale. See [macOS setup and workflow support](doc/remote-macos.md).
+
+| Variable | Default | Description |
+| --- | --- | --- |
+| `H3_COMFY_URL` | unset (local engine) | Remote ComfyUI HTTP origin; configure privately in `.env` |
+| `H3_WORKFLOWS` | `./workflows` | API-format workflow templates and overrides |
+
+For a container deployment on the Mac Mini, run `docker compose up -d --build`.
+Set `H3_COMFY_URL` and `H3_PUBLISH_PORT` in your private `.env` first.
+The container uses persistent `./data` and `./workflows` bind mounts;
+no deployment endpoint or published port is hardcoded.

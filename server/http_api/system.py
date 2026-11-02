@@ -38,6 +38,8 @@ async def health(request):
     return web.json_response(
         {
             "state": worker.state,
+            "backend": "remote" if request.app["settings"].comfy_url else "local",
+            "comfy_url": request.app["settings"].comfy_url,
             "load_error": worker.load_error,
             "running": worker.running_id,
             "family": worker.engine.family,

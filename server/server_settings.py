@@ -38,11 +38,15 @@ class ServerSettings:
     strata_parallel: int = 8
     strata_concurrency: int = 16
     strata_timeout: int = 1800
+    comfy_url: str | None = None
+    workflows: Path = ROOT / "workflows"
     comfy_args: tuple = ("--enable-triton-backend", "--use-sage-attention")
 
     @classmethod
     def from_env(cls):
         return cls(
+            comfy_url=os.environ.get("H3_COMFY_URL"),
+            workflows=Path(os.environ.get("H3_WORKFLOWS", ROOT / "workflows")).expanduser().resolve(),
             comfyui=Path(os.environ["H3_COMFYUI"])
             if os.environ.get("H3_COMFYUI")
             else None,

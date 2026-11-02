@@ -23,7 +23,7 @@ def media_upload(upload, *, max_seconds):
         raise ValueError("An audio or video file is required")
     try:
         upload.file.seek(0)
-        with av.open(upload.file) as container:
+        with av.open(upload.file, mode="r") as container:
             if not container.streams.audio:
                 raise ValueError("The uploaded file has no audio track")
             stream = container.streams.audio[0]

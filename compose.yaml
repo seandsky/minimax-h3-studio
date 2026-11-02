@@ -1,0 +1,12 @@
+services:
+  studio:
+    build: .
+    image: minimax-h3-studio:remote
+    restart: unless-stopped
+    ports:
+      - "${H3_PUBLISH_PORT:?Set H3_PUBLISH_PORT in .env}:8000"
+    environment:
+      H3_COMFY_URL: ${H3_COMFY_URL:?Set H3_COMFY_URL in .env}
+    volumes:
+      - ./data:/data
+      - ./workflows:/workflows
